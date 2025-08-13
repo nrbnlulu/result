@@ -16,7 +16,8 @@ if TYPE_CHECKING:
 # Define covariant TypeVars for proper subtyping
 T_co = TypeVar("T_co", covariant=True)
 E_co = TypeVar("E_co", covariant=True)
-
+U_co = TypeVar("U_co", covariant=True)
+R_co = TypeVar("R_co", covariant=True)
 
 class Ok(Generic[T_co, E_co]):
     __match_args__ = ("ok_value",)
@@ -94,12 +95,12 @@ class Ok(Generic[T_co, E_co]):
     def map_err[F](self, op: Callable[[E_co], F]) -> Ok[T_co, F]:
         return Ok(self._value)
 
-    def and_then[U](self, op: Callable[[T_co], Result[U, E_co]]) -> Result[U, E_co]:
+    def and_then[R, U](self, op: Callable[[T_co], Result[R, U]]) -> Result[R, U | E_co]:
         return op(self._value)
 
-    async def and_then_async[U](
-        self, op: Callable[[T_co], Awaitable[Result[U, E_co]]]
-    ) -> Result[U, E_co]:
+    async def and_then_async[R, U](
+        self, op: Callable[[T_co], Awaitable[Result[R, U]]]
+    ) -> Result[R, E_co | U]:
         return await op(self._value)
 
     def or_else[F](self, op: Callable[[E_co], Result[T_co, F]]) -> Ok[T_co, F]:
@@ -120,12 +121,6 @@ class Ok(Generic[T_co, E_co]):
         self, op: Callable[[E_co], Awaitable[object]]
     ) -> Result[T_co, E_co]:
         return self
-
-
-class DoException[E](Exception):
-    def __init__(self, err: Err[object, E]) -> None:
-        super().__init__()
-        self.err: Err[object, E] = err
 
 
 class Err(Generic[T_co, E_co]):
@@ -205,12 +200,12 @@ class Err(Generic[T_co, E_co]):
     def map_err[U](self, op: Callable[[E_co], U]) -> Result[T_co, U]:
         return Err(op(self._value))
 
-    def and_then[R](self, op: Callable[[T_co], Result[R, E_co]]) -> Result[R, E_co]:
+    def and_then[R, U](self, op: Callable[[T_co], Result[R, U]]) -> Result[R, U | E_co]:
         return Err(self._value)
 
-    async def and_then_async[R](
-        self, op: Callable[[T_co], Awaitable[Result[R, E_co]]]
-    ) -> Result[R, E_co]:
+    async def and_then_async[R, U](
+        self, op: Callable[[T_co], Awaitable[Result[R, U]]]
+    ) ->  Result[R, E_co | U]:
         return Err(self._value)
 
     def or_else[U](self, op: Callable[[E_co], Result[T_co, U]]) -> Result[T_co, U]:

@@ -1,11 +1,12 @@
 import math
 from collections.abc import Sequence
+from pickle import TRUE
 from typing import Generic, TypeVar
 
 import pytest
 
 from result import Err, Ok, Result, UnwrapError, is_err, is_ok
-from tests.utils import get_result, is_float, is_string
+from tests.utils import get_result, is_float, is_int, is_string
 
 
 def test_union_types_are_good() -> None:
@@ -73,3 +74,19 @@ def test_nested_generic_covariance() -> None:
 
     result_seq_int: Result[Sequence[int], str] = Ok([1, 2, 3])
     accepts_sequence_result(result_seq_int)
+
+def is_int_or_str(a: int | str) -> None: ...
+
+def test_and_then_can_unify_error_types_as_well() -> None:
+    def and_then(data: str) -> Result[int, int]:
+        return Ok(len(data))
+
+    res = get_result(ok=True).and_then(and_then)
+    is_int(res.unwrap())
+    is_int_or_str(res.unwrap())
+
+async def test_and_then_async_can_unify_error_types_as_well() -> None:
+    async def and_then_async(data: str) -> Result[int, int]:
+        return Ok(len(data))
+
+    res = await get_result(ok=True).and_then_async(and_then_async)
