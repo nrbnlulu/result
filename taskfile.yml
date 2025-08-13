@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  lint:
+    description: Lint the code
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+    - uv run ruff format ./src ./tests
+    - uv run ruff check ./src ./tests  --fix
+    - uv run pyright ./src ./tests
+  test:
+    description: Run tests
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+    - uv run pytest --cov=src --cov-report=xml --maxfail=1 --tb=long
