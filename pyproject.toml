@@ -22,6 +22,7 @@ packages = ["src/result"]
 dev = [
     "pyright>=1.1.403",
     "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
 ]
 
 [tool.ruff]
@@ -83,3 +84,6 @@ ignore = [
 ]
 select = ["ALL"]
 exclude = ["alembic/versions/*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto" # or "strict"
