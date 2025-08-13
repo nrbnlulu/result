@@ -1,11 +1,11 @@
-from .result import Result, Ok, Err, is_err, is_ok, UnwrapError, DoException
+from .result import DoException, Err, Ok, Result, UnwrapError, is_err, is_ok
 
 __all__ = [
-	"Result",
-	"Ok",
-	"Err",
-	"is_err",
-	"is_ok",
-	"UnwrapError",
-	"DoException",
+    "DoException",
+    "Err",
+    "Ok",
+    "Result",
+    "UnwrapError",
+    "is_err",
+    "is_ok",
 ]
