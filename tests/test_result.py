@@ -4,7 +4,7 @@ from typing import Generic, TypeVar
 import pytest
 
 from result import Err, Ok, Result, UnwrapError, is_err, is_ok
-from tests.utils import get_result, is_float, is_string
+from tests.utils import get_result, is_bool, is_float, is_int, is_list, is_string
 
 
 # Basic construction and type checking tests
