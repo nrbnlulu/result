@@ -31,6 +31,9 @@ target-version = "py312"
 fix = true
 src = ["src", "tests"]
 
+[tool.ruff.format]
+indent-style="tab"
+
 [tool.ruff.lint]
 ignore = [
     "TC001",
