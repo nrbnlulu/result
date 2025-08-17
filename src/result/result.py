@@ -168,9 +168,11 @@ class Err(Generic[T_co, E_co]):
 
     def expect_err(self, message: str) -> E_co:
         return self._value
-
+	
     def unwrap(self) -> NoReturn:
         exc = UnwrapError(self, "Called `Result.unwrap()` on an `Err` value")  # type: ignore[arg-type]
+        if isinstance(self._value, Exception):
+            raise exc from self._value
         raise exc
 
     def unwrap_err(self) -> E_co:
