@@ -171,10 +171,10 @@ class Err(Generic[T_co, E_co]):  # noqa: UP046
 		return self._value
 
 	def unwrap(self) -> NoReturn:
-		exc = UnwrapError(self, "Called `Result.unwrap()` on an `Err` value")  # type: ignore[arg-type]
 		if isinstance(self._value, Exception):
+			exc = UnwrapError(self, "Called `Result.unwrap()` on an `Err` value")  # type: ignore[arg-type]
 			raise exc from self._value
-		raise exc
+		raise UnwrapError(self, f"Called `Result.unwrap()` on an `Err` value {self._value}")
 
 	def unwrap_err(self) -> E_co:
 		return self._value
